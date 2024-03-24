@@ -1,8 +1,8 @@
-from casy import Casy
-from casy import load_and_embedd
-from casy import encode
-from casy import create_memory
-from casy import Args
+from lara import Lara
+from lara import load_and_embedd
+from lara import encode
+from lara import create_memory
+from lara import Args
 
 from fastapi import FastAPI, File, UploadFile, WebSocket
 from fastapi.responses import StreamingResponse
@@ -16,7 +16,7 @@ from typing import List
 import base64
 import os
 
-casy = Casy()
+lara = Lara()
 args = Args()
 
 
@@ -46,12 +46,12 @@ async def lifespan(app: FastAPI):
     config = yaml.load(open('configs/config.default.yaml',
                        'r'), Loader=yaml.FullLoader)
 
-    casy.g_vars['embedding'] = embeddings
-    casy.g_vars['dp'] = ''
-    casy.g_vars['memory'] = memory
-    casy.g_vars['config'] = config
+    lara.g_vars['embedding'] = embeddings
+    lara.g_vars['dp'] = ''
+    lara.g_vars['memory'] = memory
+    lara.g_vars['config'] = config
     yield
-    casy.g_vars.clear()
+    lara.g_vars.clear()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -60,8 +60,8 @@ connection_manager = ConnectionManager()
 
 @app.post("/")
 async def create_upload_file(file: UploadFile = File(...)):
-    """ Create embedding of the uploaded book
-
+    """
+    Create embedding of the uploaded book
     :param file: the uploaded file (.docs, .pdf)
     """
 
@@ -77,8 +77,8 @@ async def create_upload_file(file: UploadFile = File(...)):
 
     hash = hashlib.sha1(name.encode("UTF-8")).hexdigest()
 
-    casy.g_vars['dp'] = load_and_embedd(
-        file_location, casy.g_vars['embedding'], hash, is_json=True)
+    lara.g_vars['dp'] = load_and_embedd(
+        file_location, lara.g_vars['embedding'], hash, is_json=True)
 
     return {"filename": file.filename, "location": file_location}
 
@@ -86,13 +86,13 @@ async def create_upload_file(file: UploadFile = File(...)):
 @app.post("/text")
 async def message(message: Message):
 
-    return StreamingResponse(casy.stream_text(message.text), media_type="text/plain")
+    return StreamingResponse(lara.stream_text(message.text), media_type="text/plain")
 
 
 @app.post("/audio")
 async def message(message: Message):
 
-    return StreamingResponse(casy.stream_audio(message.text), media_type="text/mpeg")
+    return StreamingResponse(lara.stream_audio(message.text), media_type="text/mpeg")
 
 
 @app.websocket("/socket_audio")
@@ -102,11 +102,11 @@ async def message(websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
             message_content = data.split(":", 1)[1][:-1]
-            async for audio_data in casy.stream_text_audio_ws(message_content, websocket):
+            async for audio_data in lara.stream_text_audio_ws(message_content, websocket):
                 await websocket.send_bytes(audio_data)
 
-            await websocket.send_text("".join(casy.memo))
-            casy.memo = []
+            await websocket.send_text("".join(lara.memo))
+            lara.memo = []
 
     except WebSocketDisconnect:
         connection_manager.disconnect(websocket)
