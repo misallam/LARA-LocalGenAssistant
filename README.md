@@ -5,7 +5,7 @@ LARA, the Local Arabic Retrieval Augmented Generation Assistant, transforms Arab
 
 ### Clone the repo
 ```shell
-git clone https://github.com/Mahmoud-ghareeb/LARA.git
+git clone https://github.com/misallam/LARA-LocalGenAssistant.git
 ``` 
 
 ### Create Python Environment
