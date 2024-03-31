@@ -60,8 +60,8 @@ connection_manager = ConnectionManager()
 
 @app.post("/")
 async def create_upload_file(file: UploadFile = File(...)):
-    """
-    Create embedding of the uploaded book
+    """ Create embedding of the uploaded book
+
     :param file: the uploaded file (.docs, .pdf)
     """
 
@@ -86,13 +86,13 @@ async def create_upload_file(file: UploadFile = File(...)):
 @app.post("/text")
 async def message(message: Message):
 
-    return StreamingResponse(lara.stream_text(message.text), media_type="text/plain")
+    return StreamingResponse(lara.stream_text(message.message), media_type="text/plain")
 
 
 @app.post("/audio")
 async def message(message: Message):
 
-    return StreamingResponse(lara.stream_audio(message.text), media_type="text/mpeg")
+    return StreamingResponse(lara.stream_audio(message.message), media_type="text/mpeg")
 
 
 @app.websocket("/socket_audio")
@@ -102,7 +102,7 @@ async def message(websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
             message_content = data.split(":", 1)[1][:-1]
-            async for audio_data in lara.stream_text_audio_ws(message_content, websocket):
+            async for audio_data in lara.stream_text_audio_ws(message_content):
                 await websocket.send_bytes(audio_data)
 
             await websocket.send_text("".join(lara.memo))
