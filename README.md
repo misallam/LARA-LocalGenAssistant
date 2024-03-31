@@ -32,8 +32,8 @@ OPEN_AI_API_KEY = <OPEN_AI_API_KEY>
 ### Run the following docker command
 
 ```shell
-#CHANGE M:\Projects\ro2ya\LARA\store => to the location in your hard disk
-docker run -p 8000:8000 -e CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER="chromadb.auth.token.TokenConfigServerAuthCredentialsProvider" -e CHROMA_SERVER_AUTH_PROVIDER="chromadb.auth.token.TokenAuthServerProvider" -e CHROMA_SERVER_AUTH_CREDENTIALS="zed@12345678" -e CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER="X_CHROMA_TOKEN" -v M:\Projects\ro2ya\LARA\store:/chroma/chroma -d chromadb/chroma
+#CHANGE <LARA\store> => to the store location in your hard disk
+docker run -p 8000:8000 -e CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER="chromadb.auth.token.TokenConfigServerAuthCredentialsProvider" -e CHROMA_SERVER_AUTH_PROVIDER="chromadb.auth.token.TokenAuthServerProvider" -e CHROMA_SERVER_AUTH_CREDENTIALS="zed@12345678" -e CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER="X_CHROMA_TOKEN" -v <LARA\store>:/chroma/chroma -d chromadb/chroma
 ```
 
 ### Download MPV for streaming and put it in the program files
@@ -48,5 +48,5 @@ uvicorn main:app --port 8080
 
 ### You can find PostMan APIs documentation via 
 ``` shell
-https://www.postman.com
+https://www.postman.com/satellite-geoscientist-95548148/workspace/lara/collection/33188959-17e24558-26fe-4408-9681-29fa9b17ceb7?action=share&creator=33188959
 ```
