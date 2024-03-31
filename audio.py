@@ -44,3 +44,50 @@ def stream(audio_stream: Iterator[bytes]) -> bytes:
     mpv_process.wait()
 
     return audio
+
+async def astream(audio_stream: Iterator[bytes]) -> bytes:
+    mpv_command = ["C:\\Program Files\\mpv\\mpv.exe",
+                   "--no-cache", "--no-terminal", "--", "fd://0"]
+    mpv_process = subprocess.Popen(
+        mpv_command,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    audio = b""
+
+    async for chunk in audio_stream:
+        if chunk is not None:
+            mpv_process.stdin.write(chunk)
+            mpv_process.stdin.flush()
+            audio += chunk
+
+    if mpv_process.stdin:
+        mpv_process.stdin.close()
+    mpv_process.wait()
+
+    return audio
+
+
+async def astream_with_text(audio_stream: Iterator[bytes]) -> bytes:
+    mpv_command = ["C:\\Program Files\\mpv\\mpv.exe",
+                   "--no-cache", "--no-terminal", "--", "fd://0"]
+    mpv_process = subprocess.Popen(
+        mpv_command,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    async for chunk in audio_stream:
+        if chunk:
+            if type(chunk) == str:
+                        print(chunk, end="")
+            else:
+                mpv_process.stdin.write(chunk)
+                mpv_process.stdin.flush()
+
+    if mpv_process.stdin:
+        mpv_process.stdin.close()
+    mpv_process.wait()
