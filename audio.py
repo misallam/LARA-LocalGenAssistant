@@ -8,8 +8,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-elevenlabs.set_api_key(os.getenv('ELEVEN_LAPS_KEY'))
+MPV_LOCATION = os.getenv("MPV_LOCATION")
 
+elevenlabs.set_api_key(os.getenv('ELEVEN_LAPS_KEY'))
 
 def get_audio_stream(llm):
     audio_stream = elevenlabs.generate(text=llm,
@@ -22,7 +23,7 @@ def get_audio_stream(llm):
 
 
 def stream(audio_stream: Iterator[bytes]) -> bytes:
-    mpv_command = ["C:\\Program Files\\mpv\\mpv.exe",
+    mpv_command = [MPV_LOCATION,
                    "--no-cache", "--no-terminal", "--", "fd://0"]
     mpv_process = subprocess.Popen(
         mpv_command,
@@ -46,7 +47,7 @@ def stream(audio_stream: Iterator[bytes]) -> bytes:
     return audio
 
 async def astream(audio_stream: Iterator[bytes]) -> bytes:
-    mpv_command = ["C:\\Program Files\\mpv\\mpv.exe",
+    mpv_command = [MPV_LOCATION,
                    "--no-cache", "--no-terminal", "--", "fd://0"]
     mpv_process = subprocess.Popen(
         mpv_command,
@@ -71,7 +72,7 @@ async def astream(audio_stream: Iterator[bytes]) -> bytes:
 
 
 async def astream_with_text(audio_stream: Iterator[bytes]) -> bytes:
-    mpv_command = ["C:\\Program Files\\mpv\\mpv.exe",
+    mpv_command = [MPV_LOCATION,
                    "--no-cache", "--no-terminal", "--", "fd://0"]
     mpv_process = subprocess.Popen(
         mpv_command,

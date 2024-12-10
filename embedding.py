@@ -77,7 +77,7 @@ def load_and_embedd(file_path, embeddings, name, is_json=False):
         'X-Chroma-Token': 'zed@12345678'
     }
 
-    client = chromadb.HttpClient(host="127.0.0.1", port=8000, headers=headers)
+    client = chromadb.PersistentClient(path='store')
 
     try:
         client.get_collection(name=name)
@@ -92,5 +92,5 @@ def load_and_embedd(file_path, embeddings, name, is_json=False):
             client=client,
             collection_name=name
         )
-
+ 
     return vector_db

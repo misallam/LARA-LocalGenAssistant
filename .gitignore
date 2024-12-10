@@ -1,5 +1,4 @@
 models/
-wav2lip_master/
 store/*
 !store/.gitkeep
 .env
@@ -7,5 +6,5 @@ store/*
 casy/
 courses/
 __pycache__/
-books/
 row_data/*
+mpv/*
